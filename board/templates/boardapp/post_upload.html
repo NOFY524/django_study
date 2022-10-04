@@ -1,18 +1,19 @@
-<!DOCTYPE html>
-<html lang="kr">
-    <head>
-        <meta charset="UTF-8">
-        <title>Post Upload</title>
-    </head>
-    <body>
-        <h1>포스트 등록</h1>
-        <hr>
-        <div>
-            <form method="post" action="{% url 'boardapp:upload' %}">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit">등록하기</button>
-            </form>
-        </div>
-    </body>
-</html>
+{% extends 'boardapp/base.html' %}
+{% block content %}
+<div>
+    <h1>포스트 등록</h1>
+    <hr>
+    <div>
+        <form method="post" action="{% url 'boardapp:upload' %}">
+            {% csrf_token %}
+            {% for item in form %}
+                <div class="mb-3">
+                    <h5>{{ item.label }}</h5>
+                    {{ item }}
+                </div>
+            {% endfor %}
+            <button class="btn btn-primary" type="submit">등록하기</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
