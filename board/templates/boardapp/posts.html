@@ -6,6 +6,7 @@
             <tr class="table-dark">
                 <th>번호</th>
                 <th>제목</th>
+                <th>작성자</th>
                 <th>작성일지</th>
             </tr>
         </thead>
@@ -20,6 +21,7 @@
                         <div class="text-danger small mx-2">{{ post.comment_set.count }}</div>
                     </div>
                 </td>
+                <td>{{ post.author.username }}</td>
                 <td>{{ post.create_time }}</td>
             </tr>
             {% endfor %}
