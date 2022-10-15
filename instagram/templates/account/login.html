@@ -1,0 +1,7 @@
+여기는 로그인 페이지입니다.
+<form action="{% url 'account:login' %}" method='post'>
+    {% csrf_token %}
+    <input type="input" name="username" placeholder="username">
+    <input type="password" name="password" placeholder="password">
+    <input type="submit" value="login">
+</form>
