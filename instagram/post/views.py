@@ -1,11 +1,28 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import NewPostForm
+from django.urls import reverse
+
+from .forms import NewPostForm, CommentForm
 from account.models import User
+from django.db.models import Q
+from .models import Post
+from . import serializers
 
 # Create your views here.
 
 
 def index(request):
+    if request.method == "GET":
+        if request.user.is_authenticated:
+            user = get_object_or_404(User, pk=request.user.id)
+            following_users = user.following.all()
+            posts = Post.objects.filter(
+                Q(author__in=following_users) | Q(author=user)
+            )
+            serializer = serializers.PostSerializer(posts, many=True)
+
+            print(serializer.data, 'printed')
+
+            return render(request, 'post/main.html', {'posts': serializer.data, 'comment_form': CommentForm()})
     return render(request, 'post/main.html')
 
 
@@ -32,3 +49,21 @@ def new_post(request):
         else:
             return redirect('account:login')
 
+
+def new_comment(request, post_id):
+    #print("al;jkafkjl;fdskjl;afsdjkl;")
+    if request.user.is_authenticated:
+        post = get_object_or_404(Post, pk=post_id)
+
+        form = CommentForm(request.POST)
+        print(request, request.POST, 'printed')
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.author = request.user
+            comment.posts = post
+            comment.save()
+
+            return redirect(reverse('post:index')+"#comment-"+str(comment.id))
+    else:
+
+        return redirect(reverse('account:login'))

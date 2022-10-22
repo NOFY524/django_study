@@ -7,7 +7,10 @@ from django.contrib.auth import get_user_model
 
 class BaseModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_user')
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        abstract = True
 
 
 class Post(BaseModel):
@@ -17,5 +20,5 @@ class Post(BaseModel):
 
 
 class Comment(BaseModel):
-    posts = models.ForeignKey(Post, on_delete=models.CASCADE)
+    posts = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comment_post")
     contents = models.TextField()
