@@ -16,7 +16,7 @@ class BaseModel(models.Model):
 class Post(BaseModel):
     image = models.ImageField()
     caption = models.TextField()
-    likes = models.ManyToManyField(User, related_name='likes_user')
+    likes = models.ManyToManyField(User, related_name='likes_user', null=True)
 
 
 class Comment(BaseModel):

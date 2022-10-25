@@ -1,15 +1,24 @@
-<h1>여기가 회원가입 페이지입니다.</h1>
+<!-- templates/account/signup.html -->
 
-<form action="{% url 'account:signup'%}" method="post">
-    {% csrf_token %}
-    {% for field in form %}
-    <div class="fieldWrapper">
-        {{ field.errors }}
-        {{ field.label_tag }} {{ field }}
+{% extends 'account/base.html' %}
+{% block content %}
+
+<div class="d-flex justify-content-center align-items-center" style="margin-top: 150px">
+    <div class="d-flex justify-content-center align-items-center" style="border: 1px solid #c9c9c9; padding: 75px 0px 75px 0px; width: 400px">
+        <form action="{% url 'account:signup'%}" method="post">
+            <h1 class="mb-5">회원가입</h1>
+            {% csrf_token %}
+            {% for field in form %}
+                {{ field.errors }}
+                <div class="form-floating mb-3">
+                    {{ field }}
+                    <label for="{{ field.label }}">{{ field.label }}</label>
+                </div>
+            {% endfor %}
+            <input type="submit" value="Sign up" class="btn btn-primary">
+
+        </form>
     </div>
-    {% endfor %}
-    <input type="submit" value="Sign up">
+</div>
 
-</form>
-
-<a href="{% url 'account:login' %}">Login</a>
+{% endblock %}

@@ -26,8 +26,21 @@
 
         <img class="post-image" src="{{ post.image }}">
 
-        <i class="fa fa-heart-o fa-2x"></i>
-        <i class="fa fa-heart fa-2x"></i>
+        <form method="post" action="{% url 'post:post_like' post.id %}">
+            {% csrf_token %}
+            {% if user.id in post.likes %}
+            <button>
+                <i class="fa fa-heart fa-2x"></i>
+            </button>
+            {% else %}
+            <button>
+                <i class="fa fa-heart-o fa-2x"></i>
+            </button>
+            {% endif %}
+        </form>
+        <div class="likes-count">
+            {{post.likes|length}}명이 좋아합니다.
+        </div>
 
         <div class="content-container">
             <div class="content-image">
@@ -38,7 +51,13 @@
             <div class="comment">
                 {% for comment in post.comment_post %}
                     <div id="comment-{{ comment.id }}">
+                        <b>{{ comment.author.username }}</b>
                         {{ comment.contents }}
+                        {% if user.id == comment.author.id %}
+                        <a href="{% url 'post:delete_comment' comment.id %}">
+                            <i class="fa fa-trash-o fa1x"></i>
+                        </a>
+                        {% endif %}
                     </div>
                 {% endfor %}
             </div>

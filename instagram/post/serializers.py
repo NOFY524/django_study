@@ -32,5 +32,6 @@ class PostSerializer(serializers.ModelSerializer):
             'image',
             'caption',
             'comment_post',
-            'author'
+            'author',
+            'likes'
         )

@@ -4,7 +4,7 @@ from django.urls import reverse
 from .forms import NewPostForm, CommentForm
 from account.models import User
 from django.db.models import Q
-from .models import Post
+from .models import Post, Comment
 from . import serializers
 
 # Create your views here.
@@ -44,7 +44,7 @@ def new_post(request):
             else:
                 print(form.errors)
 
-            return render(request, 'post/main.html')
+            return redirect(reverse('post:index'))
 
         else:
             return redirect('account:login')
@@ -66,4 +66,25 @@ def new_comment(request, post_id):
             return redirect(reverse('post:index')+"#comment-"+str(comment.id))
     else:
 
+        return redirect(reverse('account:login'))
+
+
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, pk=comment_id)
+    if comment.author == request.user:
+        comment.delete()
+        return redirect(reverse('post:index'))
+    else:
+        return redirect(reverse('account:login'))
+
+
+def post_like(request, post_id):
+    if request.user.is_authenticated:
+        post = get_object_or_404(Post, pk=post_id)
+        if request.user in post.likes.all():
+            post.likes.remove(request.user)
+        else:
+            post.likes.add(request.user)
+        return redirect(reverse('post:index'))
+    else:
         return redirect(reverse('account:login'))
